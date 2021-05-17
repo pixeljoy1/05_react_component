@@ -1,51 +1,52 @@
 <html>
 
 <head>
-  <title>Rive React Example</title>
-  <script src="https://unpkg.com/rive-canvas@0.6.7/rive.js"></script>
+  <title>Load Rive File</title>
+ <link rel="stylesheet" href="./stylesheets/style.css"> 
 
-  
+  <!-- Rive JS/Wasm runtime -->
+  <script src="https://unpkg.com/rive-canvas@0.6.7/rive.js"></script>
+  <script src="./javascripts/main.js"></script>
 </head>
 
 <body>
-  <h1>Rive Context 2D Example</h1>
-
-  <canvas id="riveCanvas" width=512 height=512></canvas>
-</body>
-
+  <h1>Load Rive File</h1>
+  <div>
+    <!-- Canvas on which the animation is rendered -->
+    <canvas id="riveCanvas" width="500" height="500"></canvas>
+  </div>
+    
+    <script src="https://unpkg.com/rive-canvas@0.0.10/rive.js"></script>
 
 
 <!-- Simple script to run a looping animation -->
 <script>
   ; (function () {
     // first, instantiate the Rive engine and load the WASM file(s)
+     
+      
     Rive({
       locateFile: (file) => 'https://unpkg.com/rive-canvas@0.0.10/' + file,
     }).then((rive) => {
         
-        console.log("file : "+file);
+         
       // Rive's ready to rock 'n roll
       // Let's load up a Rive animation file, typically ending in '.riv'
-      const req = new Request('animations/testriv2.riv');
+      const req = new Request('./animations/off_road_car_0_6.riv');
+      //const req = new Request('./animations/testanim1.riv');
+        
+        
+alert(1);
+
       fetch(req).then((res) => {
         return res.arrayBuffer();
       }).then((buf) => {
         // we've got the raw bytes of the animation, let's load them into a Rive
         // file
-        const file = rive.load(new Uint8Array(buf));
-        // get the default artboard, where the animations we want to interact
-        // with live in this file
-        const artboard = file.defaultArtboard();
-        // now we can access the animations; let's get one called 'vibration'
-        const vibrationAnim = artboard.animation('Anim1');
-        const vibrationInstance = new rive.LinearAnimationInstance(vibrationAnim);
-        // let's grab our canvas
-        const canvas = document.getElementById('riveCanvas');
-        const ctx = canvas.getContext('2d');
-        // nw we can create a Rive renderer and wire it up to our 2D context
-        const renderer = new rive.CanvasRenderer(ctx);
-        // advance the artboard to render a frame
-        artboard.advance(0);
+        alert(2);
+        
+
+
         // Let's make sure our frame fits into our canvas
         ctx.save();
         renderer.align(rive.Fit.contain, rive.Alignment.center, {
@@ -54,6 +55,7 @@
           maxX: canvas.width,
           maxY: canvas.height
         }, artboard.bounds);
+
         // and now we can draw our frame to our canvas
         artboard.draw(renderer);
         ctx.restore();
@@ -104,5 +106,8 @@
     });
   })();
 </script>
+    
+    
+</body>
 
 </html>
