@@ -3,7 +3,7 @@ Rive({
     locateFile: (file) => 'https://unpkg.com/rive-canvas@0.6.7/' + file,
 }).then((rive) => {
     // Fetches the animation
-    const req = new Request('../animations/testriv2.riv');
+    const req = new Request('animations/off_road_car_0_6_2.riv');
     fetch(req).then((res) => {
         return res.arrayBuffer();
     }).then((buf) => {
