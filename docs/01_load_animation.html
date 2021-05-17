@@ -77,7 +77,6 @@
             .then((buffer) => {
               // Load Rive file from buffer.
               const file = load(new Uint8Array(buffer));
-              file_GLOBAL= file; // JOYDEEP ADDED THIS
               resolve({ rive, file });
             });
         });
@@ -164,7 +163,6 @@
             artboard.draw(renderer);
             ctx.restore();
               
-            drawFrame_GLOBAL = drawFrame;// Joydeep added reference
             requestAnimationFrame(drawFrame); // VERY IMPORTANT INSTRUCTION
           }// END drawFrame
             
