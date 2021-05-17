@@ -73,8 +73,8 @@ var can;
     
     
     artboard_GLOBAL.advance(0);
-    
-    requestAnimationFrame(drawFrame_GLOBAL(0));
+    lastTime_GLOBAL = 0;
+    requestAnimationFrame(drawFrame_GLOBAL(lastTime_GLOBAL));
 
 
 
