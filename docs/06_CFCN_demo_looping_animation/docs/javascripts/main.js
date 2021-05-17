@@ -18,6 +18,10 @@ Rive({
         // Get an animation and instance it
         const myAnim = artboard.animation('idle');
         const myAnimInstance = new rive.LinearAnimationInstance(myAnim);
+        
+        const wipersAnimInstance = new rive.LinearAnimationInstance(
+            artboard.animation('windshield_wipers')
+        );
 
         // Get the canvas where you want to render the animation and create a renderer
         const canvas = document.getElementById('riveCanvas');
@@ -40,10 +44,12 @@ Rive({
 
             // Advance the animation by the elapsed number of seconds
             myAnimInstance.advance(elapsedTime);
+            wipersAnimInstance.advance(elapsedTime);
             // Apply the animation to the artboard. The reason of this is that
             // multiple animations may be applied to an artboard, which will
             // then mix those animations together.
             myAnimInstance.apply(artboard, 1.0);
+            wipersAnimInstance.apply(artboard, 1.0);
             // Once the animations have been applied to the artboard, advance it
             // by the elapsed time.
             artboard.advance(elapsedTime);
