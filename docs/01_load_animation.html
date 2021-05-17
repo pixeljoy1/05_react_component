@@ -1,7 +1,16 @@
+<!DOCTYPE html>
 <html>
 
 <head>
-  <title>Load Rive File</title>
+  <meta charset="UTF-8" />
+  <title>Rive React Example</title>
+  <script src="https://unpkg.com/rive-canvas@0.6.7/rive.js"></script>
+  <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+
+  <!-- Don't use this in production: -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
   <style>
     .AnimationCanvas {
       width: 500px;
@@ -9,111 +18,188 @@
     }
   </style>
 
-
-  <!-- Rive JS/Wasm runtime -->
-  <script src="https://unpkg.com/rive-canvas@0.6.7/rive.js"></script>
-  <script src="javascripts/main.js"></script>
+<script language = "javascript">
+    
+    </script>
+    
+    
 </head>
 
 <body>
-  <h1>Load Rive File</h1>
-  <div>
-    <!-- Canvas on which the animation is rendered -->
-    <canvas id="riveCanvas" width="500" height="500"></canvas>
-  </div>
     
-    <script src="https://unpkg.com/rive-canvas@0.0.10/rive.js"></script>
+    <div id="root"></div>
 
 
-<!-- Simple script to run a looping animation -->
-<script>
-   (function () {
-    // first, instantiate the Rive engine and load the WASM file(s)
-     
-      
-    Rive({
-      locateFile: (file) => 'https://unpkg.com/rive-canvas@0.0.10/' + file,
-    }).then((rive) => {
-        
-         
-      // Rive's ready to rock 'n roll
-      // Let's load up a Rive animation file, typically ending in '.riv'
-      const req = new Request('animations/off_road_car_0_6.riv');
-      //const req = new Request('./animations/testanim1.riv');
-        
-        
-alert(1);
-
-      fetch(req).then((res) => {
-        return res.arrayBuffer();
-      }).then((buf) => {
-        // we've got the raw bytes of the animation, let's load them into a Rive
-        // file
-        alert(2);
-        
+    
+  <!-- Renders the page -->
+  <script type="text/babel">
 
 
-        // Let's make sure our frame fits into our canvas
-        ctx.save();
-        renderer.align(rive.Fit.contain, rive.Alignment.center, {
-          minX: 0,
-          minY: 0,
-          maxX: canvas.width,
-          maxY: canvas.height
-        }, artboard.bounds);
 
-        // and now we can draw our frame to our canvas
-        artboard.draw(renderer);
-        ctx.restore();
+    // Tracks loading the Rive Wasm module
+    let RiveModule = null;
+    let isLoadingModule = false;
+    const callbacks = [];
 
-        // track the last time a frame was rendered
-        let lastTime = 0;
+    // Loads the Rive Wasm module
+    function loadRiveModule(cb) {
+      if (isLoadingModule) {
+        callbacks.push(cb);
+      } else if (RiveModule) {
+        cb(RiveModule);
+      } else {
+        console.log('loading module');
+        isLoadingModule = true;
 
-        // okay, so we have an animation and a renderer; how do we play an
-        // animation? First, let's set up our animation loop with
-        // requestFrameAnimation
-        function draw(time) {
-          // work out how many seconds have passed since a previous frame was
-          // drawn
-          if (!lastTime) {
-            lastTime = time;
+        Rive({
+          locateFile: (file) => `https://unpkg.com/rive-canvas@0.6.7/${file}`,
+        }).then((module) => {
+          isLoadingModule = false;
+          RiveModule = module;
+          cb(RiveModule);
+          for (let cb of callbacks) {
+            cb(RiveModule);
           }
-          const elapsedTime = (time - lastTime) / 1000;
-          lastTime = time;
+        });
+      }
+    }
 
-          // advance our animation by the elapsed time
-          vibrationInstance.advance(elapsedTime);
-          // apply the animation to the artboard 
-          vibrationInstance.apply(artboard, 1.0);
-          // advance the artboard
-          artboard.advance(elapsedTime);
-
-          // render the animation frame
-          // first, clear the canvas
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          // let's resize it to fit the canvas
-          ctx.save();
-          renderer.align(rive.Fit.contain, rive.Alignment.center, {
-            minX: 0,
-            minY: 0,
-            maxX: canvas.width,
-            maxY: canvas.height
-          }, artboard.bounds);
-          // and now we can draw our frame to our canvas
-          artboard.draw(renderer);
-          ctx.restore();
-
-          // and kick off the next frame
-          requestAnimationFrame(draw);
-        }
-        // now kick off the animation
-        requestAnimationFrame(draw);
+    // Loads a Rive file
+    function loadRive(url) {
+      return new Promise((resolve, reject) => {
+        loadRiveModule((rive) => {
+          const { load } = rive;
+          const assetRequest = new Request(url);
+          fetch(assetRequest)
+            .then((response) => {
+              return response.arrayBuffer();
+            })
+            .then((buffer) => {
+              // Load Rive file from buffer.
+              const file = load(new Uint8Array(buffer));
+              file_GLOBAL= file; // JOYDEEP ADDED THIS
+              resolve({ rive, file });
+            });
+        });
       });
-    });
-  })();
-</script>
-    
-    
+    }
+
+
+    // React component that plays a Rive animation
+    class RiveAnimation extends React.Component {
+
+      constructor(props) {
+        super(props);
+        this.animationContainer = React.createRef();
+
+        this.setCanvas = async (canvas) => {
+          this.animationCanvas = canvas;
+          if (!canvas) {
+            return;
+          }
+
+          const { rive, file } = await loadRive(this.props.file);
+          const { CanvasRenderer, LinearAnimationInstance, Alignment, Fit } = rive;
+          // Get the default artboard.
+          const artboard = this.props.artboard != null
+            ? file.artboard(this.props.artboard)
+            : file.defaultArtboard();
+
+          // Find an animation.
+          const animation = this.props.animation
+            ? artboard.animation(this.props.animation)
+            : artboard.animation('Untitled 1');
+            
+            
+
+          // Make an animation instance (stores time and direction state
+          // for a single animation). Make sure to call .delete on this
+          // object when you are done with it.
+          const animationInstance = new LinearAnimationInstance(animation);
+            
+
+          const ctx = canvas.getContext('2d', { alpha: false });
+
+            
+          const renderer = new CanvasRenderer(ctx);
+          artboard.advance(0);
+          artboard.draw(renderer);
+
+
+          let lastTime = 0;
+            
+        console.log(this);
+            
+          function drawFrame(time) {
+            // Check if canvas is on screen
+            const rect = canvas.getBoundingClientRect();
+            if (rect.bottom < 0 || rect.top > window.innerHeight) {
+              requestAnimationFrame(drawFrame);
+              return;
+            }
+
+            if (!lastTime) {
+              lastTime = time;
+            }
+            const elapsedSeconds = (time - lastTime) / 1000;
+            lastTime = time;
+
+            animationInstance.advance(elapsedSeconds);
+            animationInstance.apply(artboard, 1.0);
+            artboard.advance(elapsedSeconds);
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.save();
+            renderer.align(
+              Fit.cover,
+              Alignment.center,
+              {
+                minX: 0,
+                minY: 0,
+                maxX: canvas.width,
+                maxY: canvas.height,
+              },
+              artboard.bounds
+            );
+            artboard.draw(renderer);
+            ctx.restore();
+              
+            drawFrame_GLOBAL = drawFrame;// Joydeep added reference
+            requestAnimationFrame(drawFrame); // VERY IMPORTANT INSTRUCTION
+          }// END drawFrame
+            
+          requestAnimationFrame(drawFrame);
+        };
+      }
+
+      componentDidMount() {
+        // Resize the canvas to it's parent's size
+        const rect = this.animationContainer.current.getBoundingClientRect();
+        this.animationCanvas.width = rect.width;
+        this.animationCanvas.height = rect.height;
+      }
+
+      render() {
+        return (
+          <div ref={this.animationContainer} className='AnimationCanvas'>
+            <canvas ref={this.setCanvas} id='Canvas1' />
+          </div>
+        );
+      }
+    }
+
+    // Render the app
+    ReactDOM.render(
+      <div>
+        <h1>Rive React Example- 01_load_animation</h1>
+        <RiveAnimation file='animations/off_road_car_0_6.riv' animation='Anim1' />
+      </div>,
+      document.getElementById('root')
+    );
+
+
+  </script>
+  
 </body>
 
 </html>
