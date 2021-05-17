@@ -1,0 +1,27 @@
+<html>
+
+<head>
+  <title>Load Rive File</title>
+  <link rel="stylesheet" href="./stylesheets/style.css">
+
+  <!-- Rive JS/Wasm runtime -->
+  <script src="https://unpkg.com/rive-canvas@0.6.7/rive.js"></script>
+  <script src="./javascripts/main.js"></script>
+</head>
+
+<body style="margin: 0">
+
+    <div id='bgImage' style='border: 0px red dashed'>
+        <image src="images/Basic-Page-1920px.jpg" width="100%"></image>
+    </div>
+    
+    
+  <div style="z-index: 1;position: absolute;border: 1px blue solid;left:530px;top:405px;" >
+    <!-- Canvas on which the animation is rendered -->
+    <canvas id="riveCanvas" width="500" height="500"></canvas>
+  </div>
+    
+    
+</body>
+
+</html>
