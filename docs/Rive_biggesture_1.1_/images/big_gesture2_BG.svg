@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="349px" height="349px" viewBox="0 0 349 349" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group Copy</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="315" height="315" rx="12"></rect>
+        <filter x="-6.5%" y="-6.5%" width="119.4%" height="119.4%" filterUnits="objectBoundingBox" id="filter-3">
+            <feMorphology radius="2.5" operator="erode" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+            <feOffset dx="10" dy="10" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="11" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <filter id="filter-4">
+            <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0.039216 0 0 0 0 0.309804 0 0 0 0 0.780392 0 0 0 1.000000 0"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="CFCN-P360" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-Copy" transform="translate(7.000000, 7.000000)">
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <g id="ICO_container_-Copy" fill-rule="nonzero">
+                <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-1"></use>
+                <use fill="#373737" xlink:href="#path-1"></use>
+            </g>
+            <path d="M141,276 C143.209139,276 145,277.790861 145,280 C145,282.209139 143.209139,284 141,284 C138.790861,284 137,282.209139 137,280 C137,277.790861 138.790861,276 141,276 Z M157,276 C159.209139,276 161,277.790861 161,280 C161,282.209139 159.209139,284 157,284 C154.790861,284 153,282.209139 153,280 C153,277.790861 154.790861,276 157,276 Z M173,276 C175.209139,276 177,277.790861 177,280 C177,282.209139 175.209139,284 173,284 C170.790861,284 169,282.209139 169,280 C169,277.790861 170.790861,276 173,276 Z" id="Combined-Shape" fill="#B1B4B7"></path>
+            <g id="Components/Icon-Button/icon--button--on-grey" transform="translate(265.000000, 10.000000)">
+                <rect id="container-copy" fill="#FFFFFF" x="0" y="0" width="40" height="40" rx="12"></rect>
+                <g id="Icon/Interface/down-arrow-on-button" transform="translate(10.000000, 10.000000)" filter="url(#filter-4)">
+                    <g>
+                        <path d="M11.5898,10.1763 L18.0598,3.7073 C18.4498,3.3163 18.4498,2.6833 18.0598,2.2933 C17.6688,1.9023 17.0358,1.9023 16.6458,2.2933 L10.1758,8.7623 L3.7068,2.2933 C3.3168,1.9023 2.6838,1.9023 2.2928,2.2933 C1.9018,2.6833 1.9018,3.3163 2.2928,3.7073 L8.7618,10.1763 L2.2928,16.6453 C1.9018,17.0353 1.9018,17.6683 2.2928,18.0593 C2.4878,18.2543 2.7438,18.3523 2.9998,18.3523 C3.2558,18.3523 3.5118,18.2543 3.7068,18.0593 L10.1758,11.5903 L16.6458,18.0593 C16.8408,18.2543 17.0968,18.3523 17.3528,18.3523 C17.6088,18.3523 17.8638,18.2543 18.0598,18.0593 C18.4498,17.6683 18.4498,17.0353 18.0598,16.6453 L11.5898,10.1763 Z" id="Fill-1" fill="#0A4FC7"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
